@@ -1,7 +1,7 @@
 from shiny import App, reactive, render, ui
 import pandas as pd
 import numpy as np
-
+import jinja2
 
 # =============================================================================
 # Constants and Logic
@@ -62,7 +62,7 @@ def server(input, output, session):
         # Savings = how much the unit could save if replaced with a best-in-class ES model
         baseline_daily_kwh = CONST_BASE + (COEF_VOL * input.vol()) + (COEF_AGE * input.age())
         baseline_year_kwh = baseline_daily_kwh * 365
-        annual_kwh_savings = max(0.0, baseline_year_kwh - avg_es_year)
+        annual_kwh_savings = baseline_year_kwh - avg_es_year
         annual_cost_savings = annual_kwh_savings * input.elec_rate()
 
         # 3. Update counter and inventory
