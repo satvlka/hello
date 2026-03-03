@@ -280,6 +280,5 @@ app_ui = ui.page_fluid(
             )
         )
     )
-)
 
 app = App(app_ui, server)
