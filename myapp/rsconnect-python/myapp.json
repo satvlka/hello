@@ -1,0 +1,12 @@
+{
+    "https://api.shinyapps.io": {
+        "server_url": "https://api.shinyapps.io",
+        "filename": "C:\\Users\\defaultuser0\\hello\\myapp",
+        "app_url": "https://ucsf-satvika-iyer.shinyapps.io/freezer-calc1/",
+        "app_id": "16778278",
+        "app_guid": null,
+        "title": "freezer-calc1",
+        "app_mode": "python-shiny",
+        "app_store_version": 1
+    }
+}
