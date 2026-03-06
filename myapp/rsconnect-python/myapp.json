@@ -5,7 +5,7 @@
         "app_url": "https://ucsf-satvika-iyer.shinyapps.io/freezer-calc1/",
         "app_id": "16778278",
         "app_guid": null,
-        "title": "freezer-calc1",
+        "title": "ULT Freezer Savings Calculator",
         "app_mode": "python-shiny",
         "app_store_version": 1
     }
