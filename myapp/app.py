@@ -27,15 +27,19 @@ def make_savings_gauges(df):
         pred  = row["Predicted Energy Use (kWh/Year)"]
         bench = row["Energy Star Alternative Avg (kWh/Year)"]
         cost  = row["Potential Annual Cost Savings ($/Year)"]
-        pct_over = min(max((pred - bench) / bench, 0), 1.0) if bench > 0 else 0
-        if pct_over == 0:
+        pct_over = (pred - bench) / bench if bench > 0 else 0
+
+        if pct_over <= 0:
             color = "#4a9d6f"
-            label = "✓ At or below benchmark"
-            bar_pct = min(max(pred / bench if bench > 0 else 1, 0.05) * 100, 100)
+            label = "✓ At or below Energy Star alternative"
+            bar_pct = max((pred / bench) * 100 if bench > 0 else 50, 5)
         else:
             color = "#e05a5a"
-            label = f"⚠ {pct_over*100:.0f}% above Energy Star benchmark"
-            bar_pct = min(100, 40 + pct_over * 60)
+            label = f"⚠ {pct_over*100:.0f}% above Energy Star alternative"
+            # bar grows proportionally, uncapped so high outliers show correctly
+            bar_pct = min(40 + (pct_over / (pct_over + 1)) * 60, 100)
+
+        cost_color = "#4a9d6f" if cost >= 0 else "#e05a5a"
         cost_color = "#4a9d6f" if cost >= 0 else "#e05a5a"
         html += f'''
         <div style="margin-bottom:12px;background:#f8f9fa;border-radius:8px;padding:10px 14px;border:1px solid #dee2e6;">
@@ -48,7 +52,7 @@ def make_savings_gauges(df):
             </div>
             <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.78rem;color:#555;">
                 <span>Predicted: <strong>{int(pred):,} kWh/yr</strong></span>
-                <span>Benchmark: <strong>{int(bench):,} kWh/yr</strong></span>
+                <span>Alternative: <strong>{int(bench):,} kWh/yr</strong></span>
                 <span style="color:{cost_color};">Savings: <strong>${cost:,.2f}/yr</strong></span>
             </div>
         </div>'''
@@ -136,8 +140,8 @@ def server(input, output, session):
         return ui.div(
             card("Total Units",          str(n),                    "in inventory",          "#003262"),
             card("Total Energy Use",     f"{int(total_kwh):,} kWh", "predicted / year",      "#e07b39"),
-            card("Potential kWh Savings",f"{int(total_sav):,} kWh", "vs Energy Star models / year",   "#4a9d6f"),
-            card("Potential Cost Savings",f"${total_cost:,.2f}",    "per year",              "#5b8fcf"),
+            card("Potential Annual kWh Savings",f"{int(total_sav):,} kWh", "if switch to Energy Star models",   "#4a9d6f"),
+            card("Potential Annual Cost Savings from Power Demand Reduction",f"${total_cost:,.2f}",    "if switch to Energy Star models",              "#5b8fcf"),
             style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px;"
         )
 
