@@ -25,7 +25,7 @@ def make_savings_gauges(df):
     html = ""
     for _, row in df.iterrows():
         pred  = row["Predicted Energy Use (kWh/Year)"]
-        bench = row["Energy Star Benchmark Avg (kWh/Year)"]
+        bench = row["Energy Star Alternative Avg (kWh/Year)"]
         cost  = row["Potential Annual Cost Savings ($/Year)"]
         pct_over = min(max((pred - bench) / bench, 0), 1.0) if bench > 0 else 0
         if pct_over == 0:
